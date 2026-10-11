@@ -2,6 +2,7 @@
 <project version="4">
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/ec2./ec2/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mini-ec2/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/mini-s3/src/main/java" charset="UTF-8" />
   </component>
 </project>
