@@ -1,4 +1,4 @@
-package com.mini.ec2.config.service;
+package com.mini.ec2.service;
 
 public interface DockerService {
     String createAndStartContainer(String image, String name);
