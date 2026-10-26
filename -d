@@ -1,0 +1,3 @@
+psql: warning: extra command-line argument ".env" ignored
+psql: warning: extra command-line argument "iamdb" ignored
+psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: FATAL:  database "from" does not exist

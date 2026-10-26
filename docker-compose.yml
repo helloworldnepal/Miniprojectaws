@@ -1,5 +1,5 @@
 services:
-  postgres:
+  postgresMini:
     image: postgres:16
     container_name: minis3-postgres
     environment:
@@ -16,7 +16,7 @@ services:
       timeout: 5s
       retries: 5
 
-  postgresec2:
+  postgresEc2:
     image: postgres:16
     container_name: ec2_db
     environment:
@@ -27,6 +27,24 @@ services:
       - "5433:5432"
     volumes:
       - postgres-ec2-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+
+  postgresIam:
+    image: postgres:16
+    container_name: iam_db
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: iamdb
+    ports:
+      - "5435:5432"
+    volumes:
+      - postgres-iam-data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
       interval: 10s
@@ -55,7 +73,7 @@ services:
     build: mini-s3
     container_name: mini-s3-app
     depends_on:
-      postgres:
+      postgresMini:
         condition: service_healthy
       minio:
         condition: service_healthy
@@ -71,7 +89,7 @@ services:
     build: mini-ec2
     container_name: mini-ec2-app
     depends_on:
-      postgresec2:
+      postgresEc2:
         condition: service_healthy
     environment:
       DB_USER: ${DB_USER}
@@ -81,7 +99,21 @@ services:
     ports:
       - "8082:8082"
 
+  mini-iam-app:
+    build: iam
+    container_name: mini-iam-app
+    depends_on:
+      postgresIam:
+        condition: service_healthy
+    environment:
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+    ports:
+      - "8083:8083"
+
 volumes:
   postgres-data:
   postgres-ec2-data:
+  postgres-iam-data:
   minio-data:
